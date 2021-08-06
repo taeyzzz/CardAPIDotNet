@@ -1,19 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using CardApi.Repositories;
 using CardApi.Repositories.IRepositories;
 using CardApi.Services;
 using CardApi.Services.IServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
 namespace CardApi
@@ -34,6 +27,8 @@ namespace CardApi
             services.AddControllers();
             services.AddSingleton<IUserRepo, UserRepository>();
             services.AddSingleton<IUserService, UserService>();
+            services.AddSingleton<ICardService, CardService>();
+            services.AddSingleton<ICardRepo, CardRepository>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CardApi", Version = "v1" });

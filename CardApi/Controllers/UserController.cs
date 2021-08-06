@@ -24,7 +24,7 @@ namespace CardApi.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public ActionResult<UserDTO> HandleGetUser(Guid id)
+        public ActionResult<UserDTO> HandleGetUser([FromRoute] Guid id)
         {
             var user = _userService.GetUserById(id);
             if(user == null)
@@ -35,7 +35,7 @@ namespace CardApi.Controllers
         }
 
         [HttpPost]
-        public ActionResult HandleCreateUser(CreateUserDTO data)
+        public ActionResult HandleCreateUser([FromBody] CreateUserDTO data)
         {
             var createdUser = _userService.CreateUser(data);
             return CreatedAtAction("HandleGetUser", new { id = createdUser.Id }, createdUser);
@@ -43,7 +43,7 @@ namespace CardApi.Controllers
 
         [HttpPatch]
         [Route("{id}")]
-        public ActionResult<UserDTO> HandleUpdateuser(Guid id, UpdateUserDTO data)
+        public ActionResult<UserDTO> HandleUpdateuser([FromRoute] Guid id, [FromBody] UpdateUserDTO data)
         {
             var user = _userService.GetUserById(id);
             if (user == null)
@@ -57,7 +57,7 @@ namespace CardApi.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        public ActionResult HandleDeleteUser(Guid id)
+        public ActionResult HandleDeleteUser([FromRoute] Guid id)
         {
             var user = _userService.GetUserById(id);
             if (user == null)

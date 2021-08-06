@@ -16,6 +16,7 @@
     <None Remove="Services\IServices\" />
     <None Remove="DTOs\" />
     <None Remove="DTOs\User\" />
+    <None Remove="DTOs\Card\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Model\" />
@@ -25,5 +26,6 @@
     <Folder Include="Services\IServices\" />
     <Folder Include="DTOs\" />
     <Folder Include="DTOs\User\" />
+    <Folder Include="DTOs\Card\" />
   </ItemGroup>
 </Project>
