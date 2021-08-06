@@ -17,6 +17,9 @@
     <None Remove="DTOs\" />
     <None Remove="DTOs\User\" />
     <None Remove="DTOs\Card\" />
+    <None Remove="Middlewares\" />
+    <None Remove="Middlewares\Error\" />
+    <None Remove="Newtonsoft.Json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Model\" />
@@ -27,5 +30,7 @@
     <Folder Include="DTOs\" />
     <Folder Include="DTOs\User\" />
     <Folder Include="DTOs\Card\" />
+    <Folder Include="Middlewares\" />
+    <Folder Include="Middlewares\Error\" />
   </ItemGroup>
 </Project>

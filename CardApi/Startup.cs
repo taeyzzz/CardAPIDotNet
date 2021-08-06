@@ -1,9 +1,12 @@
+using System.Text.Json;
+using CardApi.Middlewares.Error;
 using CardApi.Repositories;
 using CardApi.Repositories.IRepositories;
 using CardApi.Services;
 using CardApi.Services.IServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,7 +27,19 @@ namespace CardApi
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            services
+                .AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                });
+
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = actionContext => new BadRequestObjectResult(actionContext.ModelState);
+                //options.SuppressModelStateInvalidFilter = true;
+            });
+
             services.AddSingleton<IUserRepo, UserRepository>();
             services.AddSingleton<IUserService, UserService>();
             services.AddSingleton<ICardService, CardService>();
@@ -44,6 +59,7 @@ namespace CardApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CardApi v1"));
             }
+            app.ConfigureExceptionMiddleware();
 
             // app.UseHttpsRedirection();
 
