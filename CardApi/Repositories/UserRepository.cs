@@ -43,7 +43,21 @@ namespace CardApi.Repositories
 
         public User CreateUser(User user)
         {
-            throw new NotImplementedException();
+            var newUser = new User()
+            {
+                Id = Guid.NewGuid(),
+                Firstname = user.Firstname,
+                Lastname = user.Lastname,
+                Email = user.Email,
+                Password = user.Password
+            };
+            var isDuplicatedUser = _users.Any(u => u.Email == newUser.Email);
+            if (isDuplicatedUser)
+            {
+                throw new Exception("Duplicated Email");
+            }
+            _users.Add(newUser);
+            return newUser;
         }
 
         public void DeleteUserById(Guid guid)
@@ -64,9 +78,8 @@ namespace CardApi.Repositories
 
         public User UpdateUserById(Guid guid, User user)
         {
-            var updatedUser = _users
-                .Select(u => u.Id == guid ? UpdateUser(u, user) : u)
-                .FirstOrDefault(u => u.Id == guid);
+            _users = _users.Select(u => u.Id == guid ? UpdateUser(u, user) : u).ToList();
+            var updatedUser = _users.FirstOrDefault(u => u.Id == guid);
             return updatedUser;
         }
 

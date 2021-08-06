@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CardApi.DTOs.User;
 using CardApi.Model;
 
 namespace CardApi.Services.IServices
@@ -8,8 +9,8 @@ namespace CardApi.Services.IServices
     {
         List<User> ListUsers();
         User GetUserById(Guid guid);
-        User UpdateUserById(Guid guid, User user);
-        User CreateUser(User user);
+        User UpdateUserById(Guid guid, UpdateUserDTO user);
+        User CreateUser(CreateUserDTO user);
         void DeleteUserById(Guid guid);
     }
 }

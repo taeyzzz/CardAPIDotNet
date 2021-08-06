@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CardApi.DTOs.User;
 using CardApi.Model;
 using CardApi.Repositories.IRepositories;
 using CardApi.Services.IServices;
@@ -15,19 +16,26 @@ namespace CardApi.Services
             _userRepo = userRepo;
         }
 
-        public User CreateUser(User user)
+        public User CreateUser(CreateUserDTO user)
         {
-            throw new NotImplementedException();
+            var userModel = new User
+            {
+                Firstname = user.Firstname,
+                Lastname = user.Lastname,
+                Email = user.Email,
+                Password = user.Password
+            };
+            return _userRepo.CreateUser(userModel);
         }
 
         public void DeleteUserById(Guid guid)
         {
-            throw new NotImplementedException();
+            _userRepo.DeleteUserById(guid);
         }
 
         public User GetUserById(Guid guid)
         {
-            throw new NotImplementedException();
+            return _userRepo.GetUserById(guid);
         }
 
         public List<User> ListUsers()
@@ -35,9 +43,14 @@ namespace CardApi.Services
             return _userRepo.ListUsers();
         }
 
-        public User UpdateUserById(Guid guid, User user)
+        public User UpdateUserById(Guid guid, UpdateUserDTO user)
         {
-            throw new NotImplementedException();
+            var userModel = new User
+            {
+                Firstname = user.Firstname,
+                Lastname = user.Lastname
+            };
+            return _userRepo.UpdateUserById(guid, userModel);
         }
     }
 }
