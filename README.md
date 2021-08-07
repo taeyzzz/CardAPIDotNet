@@ -12,5 +12,6 @@
   - 3 ways to handle error. Useful link -> https://code-maze.com/global-error-handling-aspnetcore/
 - Authorization && Attribute
 - Connect with real database via docker
+- Logger
 - Config environment && build project
 - Deploy app
