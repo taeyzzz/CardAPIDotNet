@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
-using CardApi.Middlewares.Error;
+using CardApi.Middlewares.Error.Exceptions;
 using Microsoft.AspNetCore.Http;
 
 namespace CardApi.Middlewares
@@ -22,10 +22,10 @@ namespace CardApi.Middlewares
             {
                 await _next(httpContext);
             }
-            catch (UnAuthorizeException e)
+            catch (ForbiddenException e)
             {
-                await HandleUnAuthorizeException(httpContext, e);
-            }
+                await HandleExceptionAsync(httpContext, e);
+            }            
             catch (Exception ex)
             {
                 //_logger.LogError($"Something went wrong: {ex}");
@@ -33,22 +33,27 @@ namespace CardApi.Middlewares
             }
         }
 
-        private async Task HandleUnAuthorizeException(HttpContext httpContext, UnAuthorizeException e)
-        {
-            httpContext.Response.ContentType = "application/json";
-            httpContext.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
-            await httpContext.Response.WriteAsync(e.Message);
-        }
-
         private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
-            await context.Response.WriteAsync(new ErrorDetails()
+            context.Response.StatusCode = GetStatusCode(exception);
+            if (exception is ResponseBaseException errorBase)
             {
-                StatusCode = context.Response.StatusCode,
-                Message = "Internal Server Error from the custom middleware."
-            }.ToString());
+                await context.Response.WriteAsJsonAsync(new { errorBase.Name, errorBase.Message });
+            }
+            else
+            {
+                await context.Response.WriteAsJsonAsync(new { exception.Message });
+            }
+        }
+
+        private static int GetStatusCode(Exception exception)
+        {
+            return exception switch
+            {
+                ForbiddenException => (int)HttpStatusCode.Forbidden,
+                _ => (int)HttpStatusCode.InternalServerError
+            };
         }
     }
 }

@@ -20,6 +20,9 @@
     <None Remove="Middlewares\" />
     <None Remove="Middlewares\Error\" />
     <None Remove="Newtonsoft.Json" />
+    <None Remove="Attributes\" />
+    <None Remove="Attributes\ValidateModelAttribute\" />
+    <None Remove="Middlewares\Error\Exceptions\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Model\" />
@@ -32,5 +35,7 @@
     <Folder Include="DTOs\Card\" />
     <Folder Include="Middlewares\" />
     <Folder Include="Middlewares\Error\" />
+    <Folder Include="Attributes\" />
+    <Folder Include="Middlewares\Error\Exceptions\" />
   </ItemGroup>
 </Project>

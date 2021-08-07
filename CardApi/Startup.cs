@@ -31,13 +31,15 @@ namespace CardApi
                 .AddControllers()
                 .AddJsonOptions(options =>
                 {
+                    // config response to be camel case
                     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
                 });
 
             services.Configure<ApiBehaviorOptions>(options =>
             {
+                // handle validate model in request and return bad request response               
                 options.InvalidModelStateResponseFactory = actionContext => new BadRequestObjectResult(actionContext.ModelState);
-                //options.SuppressModelStateInvalidFilter = true;
             });
 
             services.AddSingleton<IUserRepo, UserRepository>();
