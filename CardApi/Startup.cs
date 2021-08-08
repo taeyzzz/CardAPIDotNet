@@ -1,4 +1,5 @@
 using System.Text.Json;
+using CardApi.DBContext;
 using CardApi.Middlewares.Error;
 using CardApi.Repositories;
 using CardApi.Repositories.IRepositories;
@@ -7,6 +8,7 @@ using CardApi.Services.IServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -42,10 +44,12 @@ namespace CardApi
                 options.InvalidModelStateResponseFactory = actionContext => new BadRequestObjectResult(actionContext.ModelState);
             });
 
-            services.AddSingleton<IUserRepo, UserRepository>();
-            services.AddSingleton<IUserService, UserService>();
-            services.AddSingleton<ICardService, CardService>();
-            services.AddSingleton<ICardRepo, CardRepository>();
+            services.AddDbContext<AppDBContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DBConfiguration")));
+
+            services.AddScoped<IUserRepo, UserRepository>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICardService, CardService>();
+            services.AddScoped<ICardRepo, CardRepository>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CardApi", Version = "v1" });

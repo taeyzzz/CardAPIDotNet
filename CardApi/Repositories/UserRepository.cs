@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CardApi.DBContext;
 using CardApi.Model;
 using CardApi.Repositories.IRepositories;
 
@@ -8,10 +9,12 @@ namespace CardApi.Repositories
 {
     public class UserRepository : IUserRepo
     {
+        private AppDBContext _appDBContext;
         private List<User> _users;
 
-        public UserRepository()
+        public UserRepository(AppDBContext appDBContext)
         {
+            _appDBContext = appDBContext;
             _users = new List<User>
             {
                 new User()
@@ -45,18 +48,20 @@ namespace CardApi.Repositories
         {
             var newUser = new User()
             {
-                Id = Guid.NewGuid(),
+                //Id = Guid.NewGuid(),
                 Firstname = user.Firstname,
                 Lastname = user.Lastname,
                 Email = user.Email,
                 Password = user.Password
             };
-            var isDuplicatedUser = _users.Any(u => u.Email == newUser.Email);
-            if (isDuplicatedUser)
-            {
-                throw new Exception("Duplicated Email");
-            }
-            _users.Add(newUser);
+            _appDBContext.DBUser.Add(newUser);
+            _appDBContext.SaveChanges();
+            //var isDuplicatedUser = _users.Any(u => u.Email == newUser.Email);
+            //if (isDuplicatedUser)
+            //{
+            //    throw new Exception("Duplicated Email");
+            //}
+            //_users.Add(newUser);
             return newUser;
         }
 
@@ -73,6 +78,7 @@ namespace CardApi.Repositories
 
         public List<User> ListUsers()
         {
+            return _appDBContext.DBUser.ToList();
             return _users;
         }
 

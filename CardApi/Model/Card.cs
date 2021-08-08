@@ -14,5 +14,7 @@ namespace CardApi.Model
         public string Message { get; set; }
 
         public Guid AuthorId { get; set; }
+
+        public User Author { get; set; }
     }
 }
