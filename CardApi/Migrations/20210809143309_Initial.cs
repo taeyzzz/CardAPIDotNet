@@ -46,6 +46,12 @@ namespace CardApi.Migrations
                 name: "IX_DBCard_AuthorId",
                 table: "DBCard",
                 column: "AuthorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DBUser_Email",
+                table: "DBUser",
+                column: "Email",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

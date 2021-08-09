@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CardApi.DBContext;
+using CardApi.Middlewares.Error.Exceptions;
 using CardApi.Model;
 using CardApi.Repositories.IRepositories;
 
@@ -10,95 +11,57 @@ namespace CardApi.Repositories
     public class UserRepository : IUserRepo
     {
         private AppDBContext _appDBContext;
-        private List<User> _users;
 
         public UserRepository(AppDBContext appDBContext)
         {
             _appDBContext = appDBContext;
-            _users = new List<User>
-            {
-                new User()
-                {
-                    Id = Guid.NewGuid(),
-                    Firstname = "User1",
-                    Lastname = "Last1",
-                    Email = "user1@gmail.com",
-                    Password = "password1"
-                },
-                new User()
-                {
-                    Id = Guid.NewGuid(),
-                    Firstname = "User2",
-                    Lastname = "Last2",
-                    Email = "user2@gmail.com",
-                    Password = "password2"
-                },
-                new User()
-                {
-                    Id = Guid.NewGuid(),
-                    Firstname = "User3",
-                    Lastname = "Last3",
-                    Email = "user3@gmail.com",
-                    Password = "password3"
-                }
-            };
         }
 
         public User CreateUser(User user)
         {
-            var newUser = new User()
+            var createdUser = _appDBContext.DBUser.Add(new User()
             {
-                //Id = Guid.NewGuid(),
                 Firstname = user.Firstname,
                 Lastname = user.Lastname,
                 Email = user.Email,
                 Password = user.Password
-            };
-            _appDBContext.DBUser.Add(newUser);
+            });
             _appDBContext.SaveChanges();
-            //var isDuplicatedUser = _users.Any(u => u.Email == newUser.Email);
-            //if (isDuplicatedUser)
-            //{
-            //    throw new Exception("Duplicated Email");
-            //}
-            //_users.Add(newUser);
-            return newUser;
+            return createdUser.Entity;
         }
 
         public void DeleteUserById(Guid guid)
         {
-            _users = _users.Where(u => u.Id != guid).ToList();
+            var targetUser = GetUserById(guid);
+            _appDBContext.DBUser.Remove(targetUser);
+            _appDBContext.SaveChanges();
         }
 
-        public User GetUserById(Guid guid)
+        public User GetUserById(Guid id)
         {
-            var targetUser = _users.FirstOrDefault(u => u.Id == guid);
+            var targetUser = _appDBContext.DBUser.Find(id);
+            if (targetUser == null)
+            {
+                throw new NotFoundException($"id {id} not found");
+            }
             return targetUser;
         }
 
         public List<User> ListUsers()
         {
             return _appDBContext.DBUser.ToList();
-            return _users;
         }
 
         public User UpdateUserById(Guid guid, User user)
         {
-            _users = _users.Select(u => u.Id == guid ? UpdateUser(u, user) : u).ToList();
-            var updatedUser = _users.FirstOrDefault(u => u.Id == guid);
-            return updatedUser;
-        }
+            var targetUser = GetUserById(guid);
 
-        private static User UpdateUser(User oldData, User newData)
-        {
-            return new User
-            {
-                Id = oldData.Id,
-                Firstname = newData.Firstname ?? oldData.Firstname,
-                Lastname = newData.Lastname ?? oldData.Lastname,
-                Email = oldData.Email,
-                Password = oldData.Password
-            };
+            targetUser.Firstname = user.Firstname ?? targetUser.Firstname;
+            targetUser.Lastname = user.Lastname ?? targetUser.Lastname;
+
+            var updateUser = _appDBContext.DBUser.Update(targetUser);
+            _appDBContext.SaveChanges();
+            return updateUser.Entity;
         }
     }
 }

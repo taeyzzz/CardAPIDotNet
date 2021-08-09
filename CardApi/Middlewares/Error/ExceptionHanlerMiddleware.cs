@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Data;
 using System.Net;
 using System.Threading.Tasks;
 using CardApi.Middlewares.Error.Exceptions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace CardApi.Middlewares
 {
@@ -22,10 +24,18 @@ namespace CardApi.Middlewares
             {
                 await _next(httpContext);
             }
+            catch (DbUpdateException e)
+            {
+                await HandleExceptionAsync(httpContext, e);
+            }
             catch (ForbiddenException e)
             {
                 await HandleExceptionAsync(httpContext, e);
-            }            
+            }
+            catch (NotFoundException e)
+            {
+                await HandleExceptionAsync(httpContext, e);
+            }
             catch (Exception ex)
             {
                 //_logger.LogError($"Something went wrong: {ex}");
@@ -47,11 +57,20 @@ namespace CardApi.Middlewares
             }
         }
 
+        private static async Task HandleExceptionAsync(HttpContext context, DbUpdateException exception)
+        {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = GetStatusCode(exception);
+            await context.Response.WriteAsJsonAsync(new { exception.InnerException.Message});
+        }
+
         private static int GetStatusCode(Exception exception)
         {
             return exception switch
             {
                 ForbiddenException => (int)HttpStatusCode.Forbidden,
+                NotFoundException => (int)HttpStatusCode.NotFound,
+                DbUpdateException => (int)HttpStatusCode.UnprocessableEntity,
                 _ => (int)HttpStatusCode.InternalServerError
             };
         }

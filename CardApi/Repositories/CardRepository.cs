@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CardApi.DBContext;
 using CardApi.Model;
 using CardApi.Repositories.IRepositories;
 
@@ -8,9 +9,11 @@ namespace CardApi.Repositories
 {
     public class CardRepository : ICardRepo    
     {
+        private AppDBContext _appDBContext;
         private List<Card> _cards;
-        public CardRepository()
+        public CardRepository(AppDBContext appDBContext)
         {
+            _appDBContext = appDBContext;
             _cards = new List<Card>();
         }
 
@@ -18,13 +21,15 @@ namespace CardApi.Repositories
         {
             var createdCard = new Card
             {
-                Id = Guid.NewGuid(),
+                //Id = Guid.NewGuid(),
                 Title = card.Title,
                 Message = card.Message,
                 AuthorId = card.AuthorId
             };
-            _cards.Add(createdCard);
-            return createdCard;
+            var result = _appDBContext.DBCard.Add(createdCard);
+            _appDBContext.SaveChanges();
+            //_cards.Add(createdCard);
+            return result.Entity;
         }
 
         public void DeleteCardById(Guid guid)
