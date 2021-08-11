@@ -32,6 +32,10 @@ namespace CardApi.Middlewares
             {
                 await HandleExceptionAsync(httpContext, e);
             }
+            catch (UnauthorizedExecption e)
+            {
+                await HandleExceptionAsync(httpContext, e);
+            }
             catch (NotFoundException e)
             {
                 await HandleExceptionAsync(httpContext, e);

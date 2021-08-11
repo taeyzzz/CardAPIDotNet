@@ -57,5 +57,16 @@ namespace CardApi.Repositories
             _appDBContext.SaveChanges();
             return updateUser.Entity;
         }
+
+        public User GetUserByEmail(string email)
+        {
+            var user = _appDBContext.Users.FirstOrDefault(u => u.Email == email);
+            if (user == null)
+            {
+                throw new NotFoundException($"email {email} not found");
+            }
+
+            return user;
+        }
     }
 }

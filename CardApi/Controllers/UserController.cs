@@ -56,5 +56,13 @@ namespace CardApi.Controllers
             _userService.DeleteUserById(id);
             return NoContent();
         }
+        
+        [HttpPost]
+        [Route("login")]
+        public ActionResult<UserDTO> HandleLogin([FromBody] LoginRequestDTO loginRequestDto)
+        {
+            var user = _userService.Login(loginRequestDto);
+            return user.ToDTO();
+        }
     }
 }

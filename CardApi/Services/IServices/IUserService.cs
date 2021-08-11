@@ -12,5 +12,6 @@ namespace CardApi.Services.IServices
         User UpdateUserById(Guid guid, UpdateUserDTO user);
         User CreateUser(CreateUserDTO user);
         void DeleteUserById(Guid guid);
+        User Login(LoginRequestDTO loginRequestDto);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using CardApi.DTOs.User;
 using CardApi.Model;
 
 namespace CardApi.Repositories.IRepositories
@@ -11,5 +12,6 @@ namespace CardApi.Repositories.IRepositories
         User UpdateUserById(Guid guid, User user);
         User CreateUser(User user);
         void DeleteUserById(Guid guid);
+        User GetUserByEmail(string email);
     }
 }

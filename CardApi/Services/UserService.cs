@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Authentication;
 using CardApi.DTOs.User;
+using CardApi.Middlewares.Error.Exceptions;
 using CardApi.Model;
 using CardApi.Repositories.IRepositories;
 using CardApi.Services.IServices;
@@ -23,7 +25,7 @@ namespace CardApi.Services
                 Firstname = user.Firstname,
                 Lastname = user.Lastname,
                 Email = user.Email,
-                Password = user.Password
+                Password = BCrypt.Net.BCrypt.HashPassword(user.Password, BCrypt.Net.BCrypt.GenerateSalt())
             };
             return _userRepo.CreateUser(userModel);
         }
@@ -31,6 +33,25 @@ namespace CardApi.Services
         public void DeleteUserById(Guid guid)
         {
             _userRepo.DeleteUserById(guid);
+        }
+
+        public User Login(LoginRequestDTO loginRequestDto)
+        {
+            try
+            {
+                var user = _userRepo.GetUserByEmail(loginRequestDto.Email);
+                var authenticated = BCrypt.Net.BCrypt.Verify(loginRequestDto.Password, user.Password);
+                if (!authenticated)
+                {
+                    throw new UnauthorizedExecption();
+                }
+
+                return user;
+            }
+            catch (Exception e)
+            {
+                throw new UnauthorizedExecption();
+            }
         }
 
         public User GetUserById(Guid guid)
