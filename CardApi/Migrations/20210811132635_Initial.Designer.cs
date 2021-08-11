@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CardApi.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20210809143309_Initial")]
+    [Migration("20210811132635_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,7 +42,7 @@ namespace CardApi.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("DBCard");
+                    b.ToTable("Cards");
                 });
 
             modelBuilder.Entity("CardApi.Model.User", b =>
@@ -73,7 +73,7 @@ namespace CardApi.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("DBUser");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("CardApi.Model.Card", b =>

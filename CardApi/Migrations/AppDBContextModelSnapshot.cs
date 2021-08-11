@@ -40,7 +40,7 @@ namespace CardApi.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("DBCard");
+                    b.ToTable("Cards");
                 });
 
             modelBuilder.Entity("CardApi.Model.User", b =>
@@ -71,7 +71,7 @@ namespace CardApi.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("DBUser");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("CardApi.Model.Card", b =>

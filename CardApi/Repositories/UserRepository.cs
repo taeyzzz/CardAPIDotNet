@@ -19,13 +19,7 @@ namespace CardApi.Repositories
 
         public User CreateUser(User user)
         {
-            var createdUser = _appDBContext.DBUser.Add(new User()
-            {
-                Firstname = user.Firstname,
-                Lastname = user.Lastname,
-                Email = user.Email,
-                Password = user.Password
-            });
+            var createdUser = _appDBContext.Users.Add(user);
             _appDBContext.SaveChanges();
             return createdUser.Entity;
         }
@@ -33,13 +27,13 @@ namespace CardApi.Repositories
         public void DeleteUserById(Guid guid)
         {
             var targetUser = GetUserById(guid);
-            _appDBContext.DBUser.Remove(targetUser);
+            _appDBContext.Users.Remove(targetUser);
             _appDBContext.SaveChanges();
         }
 
         public User GetUserById(Guid id)
         {
-            var targetUser = _appDBContext.DBUser.Find(id);
+            var targetUser = _appDBContext.Users.Find(id);
             if (targetUser == null)
             {
                 throw new NotFoundException($"id {id} not found");
@@ -49,7 +43,7 @@ namespace CardApi.Repositories
 
         public List<User> ListUsers()
         {
-            return _appDBContext.DBUser.ToList();
+            return _appDBContext.Users.ToList();
         }
 
         public User UpdateUserById(Guid guid, User user)
@@ -59,7 +53,7 @@ namespace CardApi.Repositories
             targetUser.Firstname = user.Firstname ?? targetUser.Firstname;
             targetUser.Lastname = user.Lastname ?? targetUser.Lastname;
 
-            var updateUser = _appDBContext.DBUser.Update(targetUser);
+            var updateUser = _appDBContext.Users.Update(targetUser);
             _appDBContext.SaveChanges();
             return updateUser.Entity;
         }

@@ -2,67 +2,62 @@
 using System.Collections.Generic;
 using System.Linq;
 using CardApi.DBContext;
+using CardApi.Middlewares.Error.Exceptions;
 using CardApi.Model;
 using CardApi.Repositories.IRepositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace CardApi.Repositories
 {
     public class CardRepository : ICardRepo    
     {
         private AppDBContext _appDBContext;
-        private List<Card> _cards;
         public CardRepository(AppDBContext appDBContext)
         {
             _appDBContext = appDBContext;
-            _cards = new List<Card>();
         }
 
         public Card CreateCard(Card card)
         {
-            var createdCard = new Card
-            {
-                //Id = Guid.NewGuid(),
-                Title = card.Title,
-                Message = card.Message,
-                AuthorId = card.AuthorId
-            };
-            var result = _appDBContext.DBCard.Add(createdCard);
+            var result = _appDBContext.Cards.Add(card);
             _appDBContext.SaveChanges();
-            //_cards.Add(createdCard);
             return result.Entity;
         }
 
         public void DeleteCardById(Guid guid)
         {
-            _cards = _cards.Where(c => c.Id != guid).ToList();
+            var targetCard = GetCardById(guid);
+            _appDBContext.Cards.Remove(targetCard);
+            _appDBContext.SaveChanges();
         }
 
-        public Card GetCardById(Guid guid)
+        public Card GetCardById(Guid id)
         {
-            return _cards.Find(c => c.Id == guid);
+            var targetCard = _appDBContext.Cards.Find(id);
+            if (targetCard == null)
+            {
+                throw new NotFoundException($"id {id} not found");
+            }
+            return targetCard;
         }
 
         public List<Card> ListCards()
         {
-            return _cards;
+            return _appDBContext.Cards
+                .Include(c => c.Author)
+                .ToList();
         }
 
         public Card UpdateCardById(Guid guid, Card card)
         {
-            _cards = _cards.Select(c => c.Id == guid ? UpdateCard(c, card) : c).ToList();
-            var targetCard = _cards.Find(c => c.Id == guid);
-            return targetCard;
-        }
+            var targetCard = GetCardById(guid);
 
-        private Card UpdateCard(Card oldCard, Card card)
-        {
-            return new Card
-            {
-                Id = oldCard.Id,
-                Title = card.Title ?? oldCard.Title,
-                Message = card.Title ?? oldCard.Title,
-                AuthorId = oldCard.AuthorId
-            };
+            targetCard.Title = card.Title ?? targetCard.Title;
+            targetCard.Message = card.Message ?? targetCard.Message;
+
+            var updateUser = _appDBContext.Cards.Update(targetCard);
+            _appDBContext.SaveChanges();
+            return updateUser.Entity;
         }
     }
 }

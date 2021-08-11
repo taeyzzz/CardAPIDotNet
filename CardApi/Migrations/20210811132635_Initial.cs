@@ -8,7 +8,7 @@ namespace CardApi.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "DBUser",
+                name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -19,11 +19,11 @@ namespace CardApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DBUser", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "DBCard",
+                name: "Cards",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -33,23 +33,23 @@ namespace CardApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DBCard", x => x.Id);
+                    table.PrimaryKey("PK_Cards", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DBCard_DBUser_AuthorId",
+                        name: "FK_Cards_Users_AuthorId",
                         column: x => x.AuthorId,
-                        principalTable: "DBUser",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_DBCard_AuthorId",
-                table: "DBCard",
+                name: "IX_Cards_AuthorId",
+                table: "Cards",
                 column: "AuthorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DBUser_Email",
-                table: "DBUser",
+                name: "IX_Users_Email",
+                table: "Users",
                 column: "Email",
                 unique: true);
         }
@@ -57,10 +57,10 @@ namespace CardApi.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "DBCard");
+                name: "Cards");
 
             migrationBuilder.DropTable(
-                name: "DBUser");
+                name: "Users");
         }
     }
 }

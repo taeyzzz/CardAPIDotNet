@@ -12,13 +12,14 @@ namespace CardApi.DBContext
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            // user email unique config
             builder.Entity<User>()
                 .HasIndex(u => u.Email)
                 .IsUnique();
         }
 
 
-        public DbSet<User> DBUser { get; set; }
-        public DbSet<Card> DBCard { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Card> Cards { get; set; }
     }
 }
