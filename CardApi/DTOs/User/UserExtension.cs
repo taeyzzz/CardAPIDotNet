@@ -14,18 +14,5 @@
                     Email = user.Email
                 };
         }
-
-        public static Model.User ToModel(this UserDTO user)
-        {
-            return user == null ?
-                null :
-                new Model.User
-                {
-                    Id = user.Id,
-                    Firstname = user.Firstname,
-                    Lastname = user.Lastname,
-                    Email = user.Email                   
-                };
-        }
     }
 }

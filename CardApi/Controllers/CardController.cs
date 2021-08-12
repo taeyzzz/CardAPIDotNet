@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CardApi.DTOs.Card;
 using CardApi.Model;
 using CardApi.Services.IServices;
@@ -17,33 +18,33 @@ namespace CardApi.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Card> HandleGetCards()
+        public IEnumerable<CardDTO> HandleGetCards()
         {
-            return _cardService.ListCards();
+            return _cardService.ListCards().Select(c => c.ToDTO());
         }
 
         [HttpGet]
         [Route("{id}")]
-        public ActionResult<Card> HandleGetCard([FromRoute] Guid id)
+        public ActionResult<CardDTO> HandleGetCard([FromRoute] Guid id)
         {
             var card = _cardService.GetCardById(id);
             if (card == null)
             {
                 return NotFound();
             }
-            return card;
+            return card.ToDTO();
         }
 
         [HttpPost]
-        public Card HandleCreateCard([FromBody] CreateCardDTO data)
+        public CardDTO HandleCreateCard([FromBody] CreateCardDTO data)
         {
             var createdCard = _cardService.CreateCard(data);
-            return createdCard;
+            return createdCard.ToDTO();
         }
 
         [HttpPatch]
         [Route("{id}")]
-        public ActionResult<Card> HandleUpdateCard([FromRoute] Guid id, [FromBody] UpdateCardDTO data)
+        public ActionResult<CardDTO> HandleUpdateCard([FromRoute] Guid id, [FromBody] UpdateCardDTO data)
         {
             var card = _cardService.GetCardById(id);
             if (card == null)
@@ -51,7 +52,7 @@ namespace CardApi.Controllers
                 return NotFound();
             }
             var updatedCard = _cardService.UpdateCardById(id, data);
-            return updatedCard;
+            return updatedCard.ToDTO();
         }
 
         [HttpDelete]

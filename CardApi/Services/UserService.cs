@@ -48,7 +48,7 @@ namespace CardApi.Services
 
                 return user;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new UnauthorizedExecption();
             }
