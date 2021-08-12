@@ -30,7 +30,7 @@ namespace CardApi.Services
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);;
+            return tokenHandler.WriteToken(token);
         }
 
         public JwtTokenData DecryptToken(string token)
