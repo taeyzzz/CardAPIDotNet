@@ -50,6 +50,7 @@ namespace CardApi
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICardService, CardService>();
             services.AddScoped<ICardRepo, CardRepository>();
+            services.AddSingleton<IJwtService, JwtTokenService>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CardApi", Version = "v1" });

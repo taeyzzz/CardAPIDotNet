@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Authentication;
 using CardApi.DTOs.User;
 using CardApi.Middlewares.Error.Exceptions;
@@ -12,10 +13,12 @@ namespace CardApi.Services
     public class UserService : IUserService
     {
         private readonly IUserRepo _userRepo;
+        private readonly IJwtService _jwtService;
 
-        public UserService(IUserRepo userRepo)
+        public UserService(IUserRepo userRepo, IJwtService jwtService)
         {
             _userRepo = userRepo;
+            _jwtService = jwtService;
         }
 
         public User CreateUser(CreateUserDTO user)
@@ -46,9 +49,10 @@ namespace CardApi.Services
                     throw new UnauthorizedExecption();
                 }
 
+                var token = _jwtService.GenerateToken(new JwtTokenData{ UserId = user.Id });
                 return user;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 throw new UnauthorizedExecption();
             }
