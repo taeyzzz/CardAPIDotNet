@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CardApi.Model
 {
-    public class Card
+    public class Card : BaseEntity
     {
         public Guid Id { get; init; }
 

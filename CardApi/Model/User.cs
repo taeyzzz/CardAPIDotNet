@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CardApi.Model
 {
-    public class User
+    public class User : BaseEntity
     {
         public Guid Id { get; init; }
 
