@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using CardApi.DTOs.User;
+using CardApi.Model;
 using CardApi.Services.IServices;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -13,10 +15,19 @@ namespace CardApi.Controllers
     {
         private readonly ILogger<UserController> _logger;
         private readonly IUserService _userService;
-        public UserController(ILogger<UserController> logger, IUserService userService)
+        private readonly IJwtService _jwtService;
+        private readonly ICookieService _cookieService;
+
+        public UserController(
+            ILogger<UserController> logger, 
+            IUserService userService, 
+            IJwtService jwtService,
+            ICookieService cookieService)
         {
             _logger = logger;
             _userService = userService;
+            _jwtService = jwtService;
+            _cookieService = cookieService;
         }
 
         [HttpGet]
@@ -62,6 +73,8 @@ namespace CardApi.Controllers
         public ActionResult<UserDTO> HandleLogin([FromBody] LoginRequestDTO loginRequestDto)
         {
             var user = _userService.Login(loginRequestDto);
+            var token = _jwtService.GenerateToken(new JwtTokenData {UserId = user.Id});
+            _cookieService.SetCookie("user-token", token);
             return user.ToDTO();
         }
     }

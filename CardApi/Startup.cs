@@ -1,10 +1,13 @@
+using System.Text;
 using System.Text.Json;
 using CardApi.DBContext;
 using CardApi.Middlewares.Error;
+using CardApi.Middlewares.Jwt;
 using CardApi.Repositories;
 using CardApi.Repositories.IRepositories;
 using CardApi.Services;
 using CardApi.Services.IServices;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 namespace CardApi
@@ -43,14 +47,18 @@ namespace CardApi
                 // handle validate model in request and return bad request response               
                 options.InvalidModelStateResponseFactory = actionContext => new BadRequestObjectResult(actionContext.ModelState);
             });
-
+            
             services.AddDbContext<AppDBContext>(options => options.UseNpgsql(Configuration.GetConnectionString("DBConfiguration")));
+            
+            //IHttpContextAccessor register
+            services.AddHttpContextAccessor();
 
             services.AddScoped<IUserRepo, UserRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICardService, CardService>();
             services.AddScoped<ICardRepo, CardRepository>();
             services.AddSingleton<IJwtService, JwtTokenService>();
+            services.AddSingleton<ICookieService, CookieService>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CardApi", Version = "v1" });
@@ -66,7 +74,8 @@ namespace CardApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CardApi v1"));
             }
-            app.ConfigureExceptionMiddleware();
+            
+            ConfigureMiddlewares(app);
 
             // app.UseHttpsRedirection();
 
@@ -78,6 +87,12 @@ namespace CardApi
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private void ConfigureMiddlewares(IApplicationBuilder app)
+        {
+            app.ConfigureExceptionMiddleware();
+            app.ConfigureJwtMiddleware();
         }
     }
 }

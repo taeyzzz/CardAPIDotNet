@@ -20,6 +20,7 @@ namespace CardApi.Controllers
         [HttpGet]
         public IEnumerable<CardDTO> HandleGetCards()
         {
+            var currentUser = HttpContext.Items["CurrentUser"] as User;
             return _cardService.ListCards().Select(c => c.ToDTO());
         }
 
