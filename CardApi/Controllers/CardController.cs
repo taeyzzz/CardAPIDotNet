@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CardApi.Attributes;
 using CardApi.DTOs.Card;
 using CardApi.Model;
 using CardApi.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CardApi.Controllers
 {
     [Route("api/[controller]")]
+    [EnsureAuthenticated]
     public class CardController : APIBaseController
     {
         private readonly ICardService _cardService;
@@ -18,9 +21,9 @@ namespace CardApi.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IEnumerable<CardDTO> HandleGetCards()
         {
-            var currentUser = HttpContext.Items["CurrentUser"] as User;
             return _cardService.ListCards().Select(c => c.ToDTO());
         }
 
