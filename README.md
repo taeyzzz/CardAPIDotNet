@@ -11,6 +11,7 @@
 - Error handler & Default error handler
   - 3 ways to handle error. Useful link -> https://code-maze.com/global-error-handling-aspnetcore/
 - Authorization && Attribute
+  - jwt with authenticate attribute. Useful link -> https://jasonwatmore.com/post/2019/10/11/aspnet-core-3-jwt-authentication-tutorial-with-example-api#users-controller-cs 
 - Connect with real database via docker
   - How to undo migration. Useful link -> https://entityframeworkcore.com/knowledge-base/50644706/ef-core-2-1--how-to-revert-migration--n--steps-back
 - Logger
