@@ -11,7 +11,5 @@ namespace CardApi.DTOs.Card
 
         [StringLength(10, MinimumLength = 1)]
         public string Message { get; set; }
-
-        public Guid AuthorId { get; set; }
     }
 }

@@ -8,9 +8,9 @@ namespace CardApi.Services.IServices
     public interface ICardService
     {
         List<Card> ListCards();
-        Card GetCardById(Guid guid);
-        Card UpdateCardById(Guid guid, UpdateCardDTO card);
-        Card CreateCard(CreateCardDTO card);
-        void DeleteCardById(Guid guid);      
+        Card GetCardById(Guid guid, Guid authorId);
+        Card UpdateCardById(Guid guid, UpdateCardDTO card, Guid authorId);
+        Card CreateCard(CreateCardDTO card, Guid authorId);
+        void DeleteCardById(Guid guid, Guid authorId);      
     }
 }

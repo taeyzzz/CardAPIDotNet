@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CardApi.Controllers
-{
+{   
     [Route("api/[controller]")]
     [EnsureAuthenticated]
     public class CardController : APIBaseController
@@ -31,7 +31,8 @@ namespace CardApi.Controllers
         [Route("{id}")]
         public ActionResult<CardDTO> HandleGetCard([FromRoute] Guid id)
         {
-            var card = _cardService.GetCardById(id);
+            var currentUser = GetContextUser();
+            var card = _cardService.GetCardById(id, currentUser.Id);
             if (card == null)
             {
                 return NotFound();
@@ -42,7 +43,8 @@ namespace CardApi.Controllers
         [HttpPost]
         public CardDTO HandleCreateCard([FromBody] CreateCardDTO data)
         {
-            var createdCard = _cardService.CreateCard(data);
+            var currentUser = GetContextUser();
+            var createdCard = _cardService.CreateCard(data, currentUser.Id);
             return createdCard.ToDTO();
         }
 
@@ -50,12 +52,8 @@ namespace CardApi.Controllers
         [Route("{id}")]
         public ActionResult<CardDTO> HandleUpdateCard([FromRoute] Guid id, [FromBody] UpdateCardDTO data)
         {
-            var card = _cardService.GetCardById(id);
-            if (card == null)
-            {
-                return NotFound();
-            }
-            var updatedCard = _cardService.UpdateCardById(id, data);
+            var currentUser = GetContextUser();
+            var updatedCard = _cardService.UpdateCardById(id, data, currentUser.Id);
             return updatedCard.ToDTO();
         }
 
@@ -63,12 +61,8 @@ namespace CardApi.Controllers
         [Route("{id}")]
         public ActionResult HandleDeleteCard([FromRoute] Guid id)
         {
-            var card = _cardService.GetCardById(id);
-            if (card == null)
-            {
-                return NotFound();
-            }
-            _cardService.DeleteCardById(id);
+            var currentUser = GetContextUser();
+            _cardService.DeleteCardById(id, currentUser.Id);
             return NoContent();
         }
     }
