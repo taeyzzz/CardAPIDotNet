@@ -16,5 +16,6 @@
   - How to undo migration. Useful link -> https://entityframeworkcore.com/knowledge-base/50644706/ef-core-2-1--how-to-revert-migration--n--steps-back
 - Logger
   - Serilog. Useful link -> https://gunnarpeipman.com/aspnet-core-file-logging/ 
+  - Serilog. Doc https://serilog.net/
 - Config environment && build project
 - Deploy app
