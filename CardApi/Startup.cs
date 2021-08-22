@@ -17,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 namespace CardApi
 {
@@ -74,7 +75,9 @@ namespace CardApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CardApi v1"));
             }
-            
+
+            app.UseSerilogRequestLogging();
+
             ConfigureMiddlewares(app);
 
             // app.UseHttpsRedirection();
