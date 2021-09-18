@@ -1,13 +1,14 @@
 using System.Text;
 using System.Text.Json;
-using CardApi.DBContext;
+using Application.Services.Cards;
+using Application.Services.Users;
 using CardApi.Middlewares.Error;
 using CardApi.Middlewares.Jwt;
-using CardApi.Repositories;
-using CardApi.Repositories.IRepositories;
-using CardApi.Services;
-using CardApi.Services.IServices;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using CardApi.Services.Cookie;
+using CardApi.Services.Jwt;
+using Domain.Interfaces;
+using Infrastructure.DBContext;
+using Infrastructure.Repositories.Card;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +16,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
@@ -54,10 +54,10 @@ namespace CardApi
             //IHttpContextAccessor register
             services.AddHttpContextAccessor();
 
-            services.AddScoped<IUserRepo, UserRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICardService, CardService>();
-            services.AddScoped<ICardRepo, CardRepository>();
+            services.AddScoped<ICardRepository, CardRepository>();
             services.AddSingleton<IJwtService, JwtTokenService>();
             services.AddSingleton<ICookieService, CookieService>();
             services.AddSwaggerGen(c =>

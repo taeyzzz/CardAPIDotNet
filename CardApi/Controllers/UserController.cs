@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CardApi.DTOs.User;
+using Application.DTOs.User;
+using Application.Services.Users;
 using CardApi.Model;
-using CardApi.Services.IServices;
-using Microsoft.AspNetCore.Http;
+using CardApi.Services.Cookie;
+using CardApi.Services.Jwt;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 

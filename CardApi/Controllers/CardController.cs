@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Application.DTOs.Card;
+using Application.Services.Cards;
 using CardApi.Attributes;
-using CardApi.DTOs.Card;
-using CardApi.Model;
-using CardApi.Services.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

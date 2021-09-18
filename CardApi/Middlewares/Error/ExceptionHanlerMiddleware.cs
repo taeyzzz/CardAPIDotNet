@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Data;
 using System.Net;
 using System.Threading.Tasks;
-using CardApi.Middlewares.Error.Exceptions;
+using Domain.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 

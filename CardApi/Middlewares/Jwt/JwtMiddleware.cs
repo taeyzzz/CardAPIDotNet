@@ -1,14 +1,8 @@
-﻿using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CardApi.Services;
-using CardApi.Services.IServices;
+﻿using System.Threading.Tasks;
+using Application.Services.Users;
+using CardApi.Services.Jwt;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 
 namespace CardApi.Middlewares.Jwt
 {

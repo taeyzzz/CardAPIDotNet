@@ -1,6 +1,6 @@
 ﻿using System;
-using CardApi.Middlewares.Error.Exceptions;
-using CardApi.Model;
+using Domain.Entities;
+using Domain.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Authorization;
